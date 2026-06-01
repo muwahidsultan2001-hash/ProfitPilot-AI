@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #0b1220;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  padding-top: 50px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 300px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 12px 18px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+/* ================= PIPELINE BOX (NEW) ================= */
+.pipeline-box {
+  background: #0f172a;
+  border: 1px solid #374151;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.pipeline-box h3 {
+  margin-top: 0;
+  color: #60a5fa;
+}
+
+.pipeline-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.pipeline-box li {
+  color: #cbd5e1;
+  margin: 4px 0;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: #111827;
+  margin: 10px auto;
+  padding: 15px;
+  width: 70%;
+  border-radius: 10px;
+  text-align: left;
+  border: 1px solid #374151;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card h2 {
+  margin-bottom: 10px;
+}
+
+.card p {
+  margin: 5px 0;
+  color: #d1d5db;
+}
+
+.profit {
+  color: #00ff88;
+  font-weight: bold;
+}
+
+.roi {
+  color: #00b7ff;
+  font-weight: bold;
+}
+
+.loading {
+  color: yellow;
+}

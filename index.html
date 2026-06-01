@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProfitPilot AI</title>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+  <div class="container">
+    <h1>ProfitPilot AI</h1>
+
+    <p class="subtitle">
+      eBay → AliExpress Profit Analyzer (Production)
+    </p>
+
+    <div class="search-box">
+      <input type="text" id="keyword" placeholder="Search products..." />
+      <button onclick="searchProducts()">Analyze</button>
+    </div>
+
+    <!-- PIPELINE OUTPUT -->
+    <div id="pipeline"></div>
+
+    <!-- RESULTS OUTPUT -->
+    <div id="results"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
