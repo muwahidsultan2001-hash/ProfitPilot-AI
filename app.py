@@ -30,9 +30,8 @@ def get_app_token():
     credentials = f"{client_id}:{client_secret}"
     encoded = base64.b64encode(credentials.encode()).decode()
 
-    # ✅ PRODUCTION URL
+    # 🧪 SANDBOX URL
     url = "https://api.sandbox.ebay.com/identity/v1/oauth2/token"
-
 
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -41,7 +40,9 @@ def get_app_token():
 
     data = {
         "grant_type": "client_credentials",
-        "scope": "https://api.ebay.com/oauth/api_scope"
+
+        # ✅ FIXED SCOPE (ONLY CHANGE)
+        "scope": "https://api.sandbox.ebay.com/oauth/api_scope"
     }
 
     response = requests.post(url, headers=headers, data=data)
@@ -57,8 +58,7 @@ def get_app_token():
 
 # ================= EBAY SEARCH =================
 def search_ebay(keyword, token):
-    # ✅ PRODUCTION URL
-    url = "https://api.ebay.com/buy/browse/v1/item_summary/search"
+    url = "https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search"
 
     headers = {
         "Authorization": f"Bearer {token}"
@@ -101,7 +101,6 @@ def search(data: dict):
 
     keyword = data.get("keyword")
 
-    # ================= TOKEN =================
     token_data = get_app_token()
     token = token_data.get("access_token")
 
@@ -111,7 +110,6 @@ def search(data: dict):
             "debug": token_data
         }
 
-    # ================= EBAY DATA =================
     ebay_data = search_ebay(keyword, token)
 
     items = []
@@ -126,25 +124,20 @@ def search(data: dict):
 
         ebay_price = float(price)
 
-        # ================= SIMULATED SALES =================
         sold_count = random.randint(80, 2000)
 
-        # ================= ALI MATCH =================
         ali_price = ali_match(title, ebay_price)
 
-        # ================= FEES =================
         ebay_fee = ebay_price * 0.12
         payment_fee = ebay_price * 0.03
         total_fees = ebay_fee + payment_fee
 
-        # ================= PROFIT =================
         profit = ebay_price - ali_price - total_fees
         roi = (profit / ali_price) * 100 if ali_price > 0 else 0
 
         profit = round(profit, 2)
         roi = round(roi, 2)
 
-        # ================= FILTER =================
         if sold_count < 100:
             continue
         if profit < 3:
@@ -152,7 +145,6 @@ def search(data: dict):
         if roi < 15:
             continue
 
-        # ================= OUTPUT =================
         items.append({
             "title": title,
             "sold_count": sold_count,
