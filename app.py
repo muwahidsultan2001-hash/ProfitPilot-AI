@@ -27,31 +27,31 @@ def get_app_token():
     if not client_id or not client_secret:
         return {"error": "missing_credentials"}
 
+    url = "https://api.sandbox.ebay.com/identity/v1/oauth2/token"
+
+    # ✅ Correct eBay Basic Auth (IMPORTANT)
     credentials = f"{client_id}:{client_secret}"
     encoded = base64.b64encode(credentials.encode()).decode()
-
-    url = "https://api.sandbox.ebay.com/identity/v1/oauth2/token"
 
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
         "Authorization": f"Basic {encoded}"
     }
 
-    # ✅ FIXED: proper form body string (IMPORTANT FOR EBAY)
-    data = (
-        "grant_type=client_credentials"
-        "&scope=https://api.sandbox.ebay.com/oauth/api_scope"
-    )
+    data = {
+        "grant_type": "client_credentials",
+        "scope": "https://api.sandbox.ebay.com/oauth/api_scope"
+    }
 
     response = requests.post(url, headers=headers, data=data)
+
+    print("TOKEN STATUS:", response.status_code)
+    print("TOKEN RESPONSE:", response.text)
 
     try:
         return response.json()
     except:
-        return {
-            "error": "invalid_response",
-            "raw": response.text
-        }
+        return {"error": "invalid_response", "raw": response.text}
 
 
 # ================= EBAY SEARCH =================
@@ -68,10 +68,11 @@ def search_ebay(keyword, token):
     }
 
     response = requests.get(url, headers=headers, params=params)
+
     return response.json()
 
 
-# ================= ALIEXPRESS MATCH (SIMULATION) =================
+# ================= ALIEXPRESS MATCH =================
 def ali_match(title, ebay_price):
     title = title.lower()
 
@@ -93,7 +94,7 @@ def root():
     return {"status": "running"}
 
 
-# ================= MAIN PIPELINE =================
+# ================= SEARCH =================
 @app.post("/search")
 def search(data: dict):
 
@@ -126,11 +127,9 @@ def search(data: dict):
 
         ali_price = ali_match(title, ebay_price)
 
-        ebay_fee = ebay_price * 0.12
-        payment_fee = ebay_price * 0.03
-        total_fees = ebay_fee + payment_fee
+        fees = ebay_price * 0.15
 
-        profit = ebay_price - ali_price - total_fees
+        profit = ebay_price - ali_price - fees
         roi = (profit / ali_price) * 100 if ali_price > 0 else 0
 
         profit = round(profit, 2)
@@ -148,7 +147,7 @@ def search(data: dict):
             "sold_count": sold_count,
             "ebay_price": ebay_price,
             "aliexpress_price": ali_price,
-            "fees": round(total_fees, 2),
+            "fees": round(fees, 2),
             "profit": profit,
             "roi": roi,
             "url": item.get("itemWebUrl")
