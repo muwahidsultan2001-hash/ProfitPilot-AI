@@ -36,9 +36,7 @@ def get_app_token():
 
     data = {
         "grant_type": "client_credentials",
-
-        # ✅ ONLY FIXED LINE (SANDBOX SCOPE)
-        "scope": "https://api.sandbox.ebay.com/oauth/api_scope"
+        "scope": "https://api.ebay.com/oauth/api_scope"
     }
 
     response = requests.post(url, headers=headers, data=data)
@@ -86,12 +84,15 @@ def search(data: dict):
 
     keyword = data.get("keyword")
 
-    # ================= STEP 1 =================
+    # ================= STEP 1: eBay PRODUCTS =================
     token_data = get_app_token()
     token = token_data.get("access_token")
 
     if not token:
-        return {"error": "token_failed"}
+        return {
+            "error": "token_failed",
+            "debug": token_data
+        }
 
     ebay_data = search_ebay(keyword, token)
 
@@ -107,20 +108,25 @@ def search(data: dict):
 
         ebay_price = float(price)
 
+        # ================= STEP 2: SALES VOLUME (SANDBOX SIMULATION) =================
         sold_count = random.randint(80, 2000)
 
+        # ================= STEP 3: ALIEXPRESS MATCH =================
         ali_price = ali_match(title, ebay_price)
 
+        # ================= STEP 4: FEES =================
         ebay_fee = ebay_price * 0.12
         payment_fee = ebay_price * 0.03
         total_fees = ebay_fee + payment_fee
 
+        # ================= STEP 5: PROFIT =================
         profit = ebay_price - ali_price - total_fees
         roi = (profit / ali_price) * 100 if ali_price > 0 else 0
 
         profit = round(profit, 2)
         roi = round(roi, 2)
 
+        # ================= STEP 6: FILTERING =================
         if sold_count < 100:
             continue
         if profit < 3:
@@ -128,6 +134,7 @@ def search(data: dict):
         if roi < 15:
             continue
 
+        # ================= STEP 7: FINAL OUTPUT =================
         items.append({
             "title": title,
             "sold_count": sold_count,
@@ -139,6 +146,7 @@ def search(data: dict):
             "url": item.get("itemWebUrl")
         })
 
+    # ranking
     items.sort(key=lambda x: (x["roi"], x["profit"]), reverse=True)
 
     return {
