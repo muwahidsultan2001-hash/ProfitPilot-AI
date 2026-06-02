@@ -9,11 +9,11 @@ async function searchProducts() {
         return;
     }
 
-    resultsDiv.innerHTML = "<p class='loading'>Searching real eBay deals...</p>";
+    resultsDiv.innerHTML = "<p class='loading'>Searching deals...</p>";
     pipelineDiv.innerHTML = "";
 
     try {
-        const response = await fetch("https://profitpilot-ai-1.onrender.com/search", {
+        const response = await fetch("http://127.0.0.1:8000/search", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -23,16 +23,9 @@ async function searchProducts() {
 
         const data = await response.json();
 
-        // ❗ SAFETY CHECK (IMPORTANT FOR PRODUCTION)
-        if (data.error) {
-            resultsDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
-            console.error("Backend error:", data);
-            return;
-        }
-
         const products = data.best_deals;
 
-        // ---------------- PIPELINE ----------------
+        // ---------------- PIPELINE DISPLAY (NEW) ----------------
         if (data.pipeline) {
             pipelineDiv.innerHTML = `
                 <div class="pipeline-box">
@@ -52,7 +45,7 @@ async function searchProducts() {
             return;
         }
 
-        // ---------------- CARDS ----------------
+        // ---------------- PRODUCT CARDS ----------------
         products.forEach(product => {
 
             const card = document.createElement("div");
