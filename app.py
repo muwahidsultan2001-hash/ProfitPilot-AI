@@ -30,7 +30,6 @@ def get_app_token():
     credentials = f"{client_id}:{client_secret}"
     encoded = base64.b64encode(credentials.encode()).decode()
 
-    # 🧪 SANDBOX URL
     url = "https://api.sandbox.ebay.com/identity/v1/oauth2/token"
 
     headers = {
@@ -38,12 +37,11 @@ def get_app_token():
         "Authorization": f"Basic {encoded}"
     }
 
-    data = {
-        "grant_type": "client_credentials",
-
-        # ✅ FIXED SCOPE (ONLY CHANGE)
-        "scope": "https://api.sandbox.ebay.com/oauth/api_scope"
-    }
+    # ✅ FIXED: proper form body string (IMPORTANT FOR EBAY)
+    data = (
+        "grant_type=client_credentials"
+        "&scope=https://api.sandbox.ebay.com/oauth/api_scope"
+    )
 
     response = requests.post(url, headers=headers, data=data)
 
