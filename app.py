@@ -36,7 +36,7 @@ def get_app_token():
 
     data = {
         "grant_type": "client_credentials",
-        "scope": "https://api.ebay.com/oauth/api_scope"
+        "scope": "https://api.sandbox.ebay.com/oauth/api_scope"
     }
 
     response = requests.post(url, headers=headers, data=data)
