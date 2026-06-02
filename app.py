@@ -31,7 +31,8 @@ def get_app_token():
     encoded = base64.b64encode(credentials.encode()).decode()
 
     # ✅ PRODUCTION URL
-    url = "https://api.ebay.com/identity/v1/oauth2/token"
+    url = "https://api.sandbox.ebay.com/identity/v1/oauth2/token"
+
 
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
